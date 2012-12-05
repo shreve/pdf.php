@@ -1,4 +1,4 @@
-kohana-3-tcpdf-wrapper-class
+Kohana 3 TCPDF wrapper class
 ============================
 
 A great starter class for anyone who wants to use TCPDF with the Kohana framework
