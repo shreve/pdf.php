@@ -16,7 +16,7 @@ class PDF
     	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', TRUE, 'UTF-8', FALSE);
 
     	$pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor(PDF_AUTHOR);
+        $pdf->SetAuthor($attributes['author'] ? $attributes['author'] : PDF_AUTHOR);
         $pdf->SetTitle($attributes['title'] ? $attributes['title'] : '');
         $pdf->SetSubject($attributes['subject'] ? $attributes['subject'] : '');
         $this->keywords = (!empty($attributes['keywords'])) ? array_merge($attributes['keywords'], $this->keywords) : $this->keywords;
@@ -27,7 +27,7 @@ class PDF
         $pdf->setPrintFooter(FALSE);
 
         // Set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, (is_int($margins[3]) ? $margins[3] : PDF_MARGIN_LEFT));
+        $pdf->SetAutoPageBreak(TRUE, (is_int($margins[3]) ? $margins[3] : PDF_MARGIN_BOTTOM));
 
         // Set default monospaced font
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
