@@ -6,7 +6,7 @@ require_once Kohana::find_file('vendor/tcpdf/config/lang', 'eng');
 
 class PDF
 {
-	protected $_pdf; // The actual PDF, Object of TCPDF class
+    protected $_pdf; // The actual PDF, Object of TCPDF class
     public $width; // Width of content area, not the PDF page itself
     public $height; // Height of content area, not the PDF page itself
     public $keywords = array(); // Default keywords you would want for all documents

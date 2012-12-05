@@ -7,9 +7,11 @@ A great starter class for anyone who wants to use TCPDF with the Kohana framewor
 ## Installation ##
 Download the latest TCPDF zip from http://sourceforge.net/projects/tcpdf/files/
 
-Place the unziped folder in application/vendors/tcpdf/
+Place the unziped folder in 
+    application/vendors/tcpdf/
 
-Place this php file in application/classes/
+Place this php file in 
+    application/classes/
 
 **BAM!** You're good to go
 
@@ -35,3 +37,9 @@ the constructor function accepts two arrays, one for attributes, and one for mar
 	);
 	$margins = array(10,25,10,25); // Left, Top, Right, Bottom
 	$pdf = new PDF($attributes, $margins);
+
+When working inside the class, it is important to note that the PDF class doens't extend the
+TCPDF class. To access TCPDF functions from inside the class, use
+    
+    $this->_pdf->TCPDFFunction();
+
