@@ -1,8 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-require_once Kohana::find_file('vendor/tcpdf', 'tcpdf');
-require_once Kohana::find_file('vendor/tcpdf/config/lang', 'eng');
-
+if(isset(Kohana))
+{
+	require_once Kohana::find_file('vendor/tcpdf', 'tcpdf');
+	require_once Kohana::find_file('vendor/tcpdf/config/lang', 'eng');
+}
+if(file_exists(dirname(__file__).'/tcpdf/tcpdf.php'))
+{
+	require_once dirname(__file__).'/tcpdf/tcpdf.php';
+}
 
 class PDF
 {
@@ -49,7 +55,23 @@ class PDF
         $this->set_pdf_width()
         $this->get_width_height();
     }
-    public function set_pdf_width()
+
+	public function __get($name)
+	{
+		return $this->_pdf->$name;	
+	}
+
+	public function __set($name, $value)
+	{
+		return $this->_pdf->$name = $value;	
+	}
+
+	public function __call($method, $params)
+	{
+		return call_user_func_array(array($this->_pdf, $method), $params);
+	}
+	
+	public function set_pdf_width()
     {
     	$pthw = $this->_pdf->getPageSizeFromFormat('LETTER');
     	$ptheight = $pthw['height'];

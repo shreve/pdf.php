@@ -1,12 +1,14 @@
-Kohana 3 TCPDF wrapper class
+PDF.php
 ============================
 
-A great starter class for anyone who wants to use TCPDF with the Kohana framework
+a php wrapper for TCPDF stuff
 
 
 ## Installation ##
-Download the latest TCPDF zip from http://sourceforge.net/projects/tcpdf/files/
 
+I've included TCPDF bundled in this repository.
+
+**If you're using Kohana**
 Place the unziped folder in 
     application/vendors/tcpdf/
 
@@ -15,6 +17,7 @@ Place this php file in
 
 **BAM!** You're good to go
 
+**Otherwise, place this whole directory in whatever vendor folder you have.**
 
 ## Usage ##
 
