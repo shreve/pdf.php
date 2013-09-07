@@ -127,34 +127,31 @@ class PDF
     }
     public function get_margin($side='left')
     {
-        $margins = $this->_pdf->getMargins();
+        $margins = $this->getMargins();
         return $margins[$side];
     }
     public function new_page()
     {
-        $this->_pdf->AddPage();
-        $this->_pdf->SetXY($this->get_margin('left'),$this->get_margin('top'));
-    }
-    public function getPages()
-    {
-        return count($this->_pdf->pages);
+        $this->AddPage();
+        $this->SetXY($this->get_margin('left'),$this->get_margin('top'));
     }
     public function removeBlankPages()
     {
-        for($i=1; $i < count($this->_pdf->pages)+1; $i++)
+		$pages = $this->getNumPages();
+		for($i=1; $i < count($pages)+1; $i++)
         {
-            if(strlen($this->_pdf->pages[$i]) < 500)
+            if(strlen($pages[$i]) < 500)
             {
-                $this->_pdf->deletePage($i);
+                $this->deletePage($i);
             }
         }
-        return $this->getPages();
+        return $this->getNumPages();
     }
     public function render($file='temp')
     {
-        $this->removeBlankPages();
-        $this->_pdf->Output($file.'.pdf', 'I');
-        Request::current()->response()->headers('Content-Type', 'application/pdf');
+        #$this->removeBlankPages();
+        $this->Output($file.'.pdf', 'I');
+		header('Content-Type: application/pdf');
     }
 
 
