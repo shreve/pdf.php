@@ -1,10 +1,10 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
 
-if(isset(Kohana))
-{
-	require_once Kohana::find_file('vendor/tcpdf', 'tcpdf');
-	require_once Kohana::find_file('vendor/tcpdf/config/lang', 'eng');
-}
+#if(isset(Kohana))
+#{
+#	require_once Kohana::find_file('vendor/tcpdf', 'tcpdf');
+#	require_once Kohana::find_file('vendor/tcpdf/config/lang', 'eng');
+#}
 if(file_exists(dirname(__file__).'/tcpdf/tcpdf.php'))
 {
 	require_once dirname(__file__).'/tcpdf/tcpdf.php';
@@ -15,18 +15,24 @@ class PDF
     protected $_pdf; // The actual PDF, Object of TCPDF class
     public $width; // Width of content area, not the PDF page itself
     public $height; // Height of content area, not the PDF page itself
-    public $keywords = array(); // Default keywords you would want for all documents
-
+    public $keywords = ''; // Default keywords you would want for all documents
+	
+	/**
+	 * PDF.php Constructor
+	 * @param array $attributes author, title, subject, keywords[]
+	 * @param array $margins array(left, top, right, bottom)
+	 * @return PDF $this
+	 */
     public function __construct($attributes = NULL, $margins = NULL)
     {
     	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', TRUE, 'UTF-8', FALSE);
 
     	$pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor($attributes['author'] ? $attributes['author'] : PDF_AUTHOR);
-        $pdf->SetTitle($attributes['title'] ? $attributes['title'] : '');
-        $pdf->SetSubject($attributes['subject'] ? $attributes['subject'] : '');
-        $this->keywords = (!empty($attributes['keywords'])) ? array_merge($attributes['keywords'], $this->keywords) : $this->keywords;
-        $pdf->SetKeywords(implode(', ', $this->keywords));
+        $pdf->SetAuthor($attributes['author'] ?: PDF_AUTHOR);
+        $pdf->SetTitle($attributes['title'] ?: '');
+        $pdf->SetSubject($attributes['subject'] ?: '');
+		$this->keywords = is_string($this->keywords) ? $this->keywords : implode(', ', array_merge($attributes['keywords'], $this->keywords));
+        $pdf->SetKeywords($this->keywords);
 
         // Remove default header/footer
         $pdf->setPrintHeader(FALSE);
@@ -52,28 +58,46 @@ class PDF
 
         $pdf->AddPage();
         $this->_pdf = $pdf;
-        $this->set_pdf_width()
-        $this->get_width_height();
+		$this->set_pdf_width();
+		$this->get_width_height();
+		return $this;
     }
 
 	public function __get($name)
 	{
-		return $this->_pdf->$name;	
+		if(isset($this->$name))
+			return $this->$name;
+		elseif(isset($this->_pdf->$name))
+			return $this->_pdf->$name;
+		else
+			throw new Exception("Can't get '$name'");
 	}
 
 	public function __set($name, $value)
 	{
-		return $this->_pdf->$name = $value;	
+		if(isset($this->$name))
+			return $this->$name = $value;
+		elseif(isset($this->_pdf->$name))
+			return $this->_pdf->$name = $value;
+		else
+			throw new Exception("Can't set '$name' to '$value'");
 	}
 
 	public function __call($method, $params)
 	{
-		return call_user_func_array(array($this->_pdf, $method), $params);
+		if(method_exists($this, $method))
+			return call_user_func_array(array($this, $method), $params);
+		elseif( method_exists($this->_pdf, $method) )
+			return call_user_func_array(array($this->_pdf, $method), $params);
+		elseif( method_exists(TCPDF_STATIC, $method) )
+			return call_user_func_array(array(TCPDF_STATIC, $method), $params);
+		else
+			throw new Exception("No Method '$method'");
 	}
 	
 	public function set_pdf_width()
     {
-    	$pthw = $this->_pdf->getPageSizeFromFormat('LETTER');
+		$pthw = $this->getPageSizeFromFormat('LETTER');
     	$ptheight = $pthw['height'];
     	$ptwidth = $pthw['width'];
     	switch(PDF_UNIT)
