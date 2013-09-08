@@ -1,7 +1,7 @@
 PDF.php
 ============================
 
-a php wrapper for TCPDF stuff
+a php wrapper for TCPDF
 
 
 ## Installation ##
@@ -9,6 +9,7 @@ a php wrapper for TCPDF stuff
 I've included TCPDF bundled in this repository.
 
 **If you're using Kohana**
+
 Place the unziped folder in 
     application/vendors/tcpdf/
 
@@ -21,13 +22,11 @@ Place this php file in
 
 ## Usage ##
 
-this class is meant to be built onto.
+I reccomend building classes that extend PDF, so you can generate individual documents as easy as
 
-I reccomend buinding functions entirely in the class so your controllers can be as simple as
+    class ExpenseReport extends PDF { }
 
-    $report = DB::select()...
-    $pdf = new PDF();
-    $pdf->buildExpenseReport($report);
+	$pdf = new ExpenseReport($report);
     $pdf->render($report->title)
 
 the constructor function accepts two arrays, one for attributes, and one for margins
@@ -40,9 +39,3 @@ the constructor function accepts two arrays, one for attributes, and one for mar
 	);
 	$margins = array(10,25,10,25); // Left, Top, Right, Bottom
 	$pdf = new PDF($attributes, $margins);
-
-When working inside the class, it is important to note that the PDF class doens't extend the
-TCPDF class. To access TCPDF functions from inside the class, use
-    
-    $this->_pdf->TCPDFFunction();
-
