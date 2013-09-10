@@ -6,7 +6,8 @@ a php wrapper for TCPDF
 
 ## Installation ##
 
-I've included TCPDF bundled in this repository.
+This version is working as of TCPDF 6.0.024
+http://downloads.sourceforge.net/project/tcpdf/OldFiles/tcpdf_6_0_024.zip
 
 **If you're using Kohana**
 
